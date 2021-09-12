@@ -29,9 +29,25 @@
 #define ECHO 0
 #define LED 1
 
+// defines the minimum capacity difference for the touch switch to trigger
+// this number has no real units, check measure_cap for more information on where does the number come from
+// must be an integer >= 0; lower values mean more sensitive
+#define TOUCH_SENSITIVITY 6
+
+// how many times times should we measure no touch till we are sure that there is no touch
+#define DEBOUNCE_CYCLES 5
+
 #define NOOP asm volatile("nop" ::)
 // #undef NOOP
 // #define NOOP ; // if I ever get mad, noop gets defined like this :P
+
+#define watchdog_enable()             \
+    WDTCR = (1 << WDCE) | (1 << WDE); \
+    WDTCR = (1 << WDIE) | WDTO_30MS;
+
+#define watchdog_disable()            \
+    WDTCR = (1 << WDCE) | (1 << WDE); \
+    WDTCR = 0;
 
 uint32_t calibration;
 
@@ -55,7 +71,7 @@ uint32_t measure_cap(uint8_t pin)
     } while (!(PINB & (1 << pin))); // wait until the pin is in high state
     PORTB &= ~(1 << TRIG);          // stop charging
     return i;
-}   
+}
 
 static inline void adc_init()
 {
@@ -65,7 +81,7 @@ static inline void adc_init()
     ADMUX = 0b00100011; // setup the ADC multilpexer - adjust results to left to easily read 8-bit output; set ADC input to ADC3
     // ADEN ADSC ADATE ADIF ADIE ADPS2 ADPS1 ADPS0
     ADCSRA = 0b00000011; // ADC status register A - set clock divider to 1/8
-    DIDR0 |= 1 << ADC3D; // disable digital input on ADC3
+    DIDR0 |= 1 << ADC3D; // disable digital input on 
     */
 }
 
@@ -90,16 +106,13 @@ static inline void wdt_init_first()
     // clear MCU status reg as we don't care about the reset source
     MCUSR = 0;
     // sequence to clear watchdog settings
-    WDTCR = (1 << WDCE) | (1 << WDE);
-    WDTCR = 0;
-    
+    watchdog_disable();
 }
 
-static inline void wdt_enable()
+static inline void wdt_sleep_setup()
 {
     // set watchdog to interrupt mode each 30 ms
-    WDTCR = (1 << WDCE) | (1 << WDE);
-    WDTCR = (1 << WDIE) | WDTO_30MS;
+    watchdog_enable();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
 }
@@ -119,7 +132,7 @@ int main(void)
     cli();
     init();
     // bool is_dark = 0;
-    wdt_enable();
+    wdt_sleep_setup();
     sei();
     while (1)
     {
@@ -131,7 +144,7 @@ int main(void)
             sleep_cpu();
         }
 
-            /*
+        /*
         ADCSRA |= 1 << ADEN; // enable ADC
         ADCSRA |= 1 << ADSC; // start conversion
 
@@ -140,31 +153,52 @@ int main(void)
         int adc_reading = ADCH; // retrieve upper 8-bits from ADC results
         ADCSRA &= ~(1 << ADEN); // enable ADC
         */
-            // _delay_ms(50);
-        }
+        // _delay_ms(50);
+    }
 }
 
+bool is_touching = false;
+// bool led_on = false;
+int debounce_cycles = 0;
 
-ISR (WDT_vect)
+ISR(WDT_vect)
 {
     sleep_disable();
     cli();
-    // re-enable watchdog interrupts
-    WDTCR |= (1 << WDIE);
+    // re-enable watchdog interrupts, since they get disabled each time an interrupt occurs
+    // WDTCR |= (1 << WDIE);
 
-/*
+    // replacement for the previous statement, this disables WDT instead (reenabled at the end of ISR)
+    watchdog_disable()
+
+    /*
       #############
      # MAIN LOOP #
     #############
-*/
-    if(measure_cap(ECHO) > (calibration + 8))
+    */
+    if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
     {
-        PORTB |= (1 << LED);
+        debounce_cycles = DEBOUNCE_CYCLES;
+        if (!is_touching)
+        {
+            is_touching = true;
+            PORTB ^= (1 << LED);
+        }
     }
     else
     {
-        PORTB &= ~(1 << LED);
+        if (debounce_cycles > 0)
+        {
+            --debounce_cycles;
+        }
+        else
+        {
+            is_touching = false;
+        }
     }
+
+    // post-ISR cleanup
+    watchdog_enable();
     sei();
     sleep_enable();
 }
