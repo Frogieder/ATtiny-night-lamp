@@ -6,8 +6,9 @@
 * X * light up the LED
 * X * detect touch
 *   * touch logic
-*   * automatic turn off
-*   * add pwm support
+* X * automatic turn off
+* X * add pwm support
+*   * fix random turning off
 * X * implement efficient sleeping
 *   * use photoresistor to turn on
 *
@@ -32,10 +33,10 @@
 // defines the minimum capacity difference for the touch switch to trigger
 // this number has no real units, check measure_cap for more information on where does the number come from
 // must be an integer >= 0; lower values mean more sensitive
-#define TOUCH_SENSITIVITY 6
+#define TOUCH_SENSITIVITY 12
 
 // how many times times should we measure no touch till we are sure that there is no touch
-#define DEBOUNCE_CYCLES 5
+#define DEBOUNCE_CYCLES 10
 
 #define NOOP asm volatile("nop" ::)
 // #undef NOOP
@@ -48,6 +49,10 @@
 #define watchdog_disable()            \
     WDTCR = (1 << WDCE) | (1 << WDE); \
     WDTCR = 0;
+
+#define pwm_enable() TCCR0A |= (1 << COM0B1)
+
+#define pwm_disable() TCCR0A &= ~(1 << COM0B1)
 
 uint32_t calibration;
 
@@ -98,7 +103,14 @@ static inline void touch_init(void)
 
 static inline void pwm_init()
 {
-    // TO DO
+    // set Waveform generation mode to 3 - Fast PWM, TOP = 0xFF
+    // set set Compare output mode to "Clear OC0B on Compare Match, set OC0B at TOP"
+    TCCR0A = (1 << WGM00) | (1 << WGM01);
+
+    // set PWM prescaler to 1/8
+    TCCR0B = (1 << CS01);
+    // set duty cycle to 0
+    OCR0B = 0;
 }
 
 static inline void wdt_init_first()
@@ -158,8 +170,41 @@ int main(void)
 }
 
 bool is_touching = false;
-// bool led_on = false;
+uint8_t led_strength = 0;
 int debounce_cycles = 0;
+
+static inline void light_loop()
+{
+    led_strength = 255;
+    OCR0B = 255;
+    pwm_enable();
+    while (led_strength > 0)
+    {
+        _delay_ms(100);
+        --led_strength;
+        if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
+        {
+            if (!is_touching)
+            {
+                led_strength = 0;
+                is_touching = true;
+            }
+            debounce_cycles = DEBOUNCE_CYCLES;
+        }
+        else
+        {
+            if (debounce_cycles > 0)
+            {
+                --debounce_cycles;
+            }
+            else
+            {
+                is_touching = false;
+            }
+        }
+        OCR0B = led_strength;
+    }
+}
 
 ISR(WDT_vect)
 {
@@ -171,23 +216,24 @@ ISR(WDT_vect)
     // replacement for the previous statement, this disables WDT instead (reenabled at the end of ISR)
     watchdog_disable()
 
-    /*
+        /*
       #############
      # MAIN LOOP #
     #############
     */
-    if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
+        if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
     {
-        debounce_cycles = DEBOUNCE_CYCLES;
         if (!is_touching)
         {
             is_touching = true;
-            PORTB ^= (1 << LED);
+            debounce_cycles = DEBOUNCE_CYCLES;
+            light_loop();
+            pwm_disable();
         }
     }
     else
     {
-        if (debounce_cycles > 0)
+        if (debounce_cycles)
         {
             --debounce_cycles;
         }
@@ -199,6 +245,6 @@ ISR(WDT_vect)
 
     // post-ISR cleanup
     watchdog_enable();
-    sei();
+    sei(); 
     sleep_enable();
 }

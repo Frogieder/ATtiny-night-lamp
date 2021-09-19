@@ -8,7 +8,7 @@ TARGET=main
 SRCS=source-code/main.cpp
 PROGRAMMER=avrisp
 
-all:
+build:
 	${CC} ${CFLAGS} -o ${TARGET}.bin ${SRCS}
 	${OBJCOPY} -j .text -j .data -O ihex ${TARGET}.bin ${TARGET}.hex
 flash:

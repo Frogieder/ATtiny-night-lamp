@@ -30,6 +30,6 @@ For full TO-DO list check source-code/main.c
 
 # Make your own
 
-**Beware, this priject is still in active development and anything, including the circuit and the code may change**
+**Beware, this project is still in active development and anything, including the circuit and the code may change**
 
 The folder 'schematics-boards' contains Eagle files, so you can export files in any format you need. You will need MMBF170 library downloaded in '~/EAGLE/libraries/MMBF170.lbr'. There is also a pdf which contains exported file you can use if you are going to make the PCB using the photosensitive method. For toner transfer, you will need to mirror the design to be able to make it. 
