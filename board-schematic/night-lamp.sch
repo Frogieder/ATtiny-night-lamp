@@ -12367,19 +12367,20 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <part name="LED2" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="5MM" package3d_urn="urn:adsk.eagle:package:15799/2"/>
 <part name="LED3" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="5MM" package3d_urn="urn:adsk.eagle:package:15799/2"/>
 <part name="LED4" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="5MM" package3d_urn="urn:adsk.eagle:package:15799/2"/>
-<part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
-<part name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
-<part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
-<part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
-<part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
+<part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="180R"/>
+<part name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="180R"/>
+<part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="180R"/>
+<part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="180R"/>
+<part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="8M2"/>
 <part name="J1" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" deviceset="CONN_02" device="" package3d_urn="urn:adsk.eagle:package:38039/1"/>
-<part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C1206" package3d_urn="urn:adsk.eagle:package:23618/2"/>
+<part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100n"/>
 <part name="Q1" library="MMBF170" deviceset="MMBF170" device=""/>
 <part name="J2" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" deviceset="CONN_01" device="" package3d_urn="urn:adsk.eagle:package:38028/1"/>
 <part name="U1" library="Switches" library_urn="urn:adsk.eagle:library:14854419" deviceset="1825096-1" device="" package3d_urn="urn:adsk.eagle:package:14854672/2"/>
-<part name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
+<part name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="15k"/>
 <part name="PH1" library="photo-elements" library_urn="urn:adsk.eagle:library:323" deviceset="D11" device="" package3d_urn="urn:adsk.eagle:package:22200/1" technology="60_12"/>
-<part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2"/>
+<part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="15k"/>
+<part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R1206" package3d_urn="urn:adsk.eagle:package:23540/2" value="1M"/>
 </parts>
 <sheets>
 <sheet>
@@ -12408,23 +12409,23 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 </instance>
 <instance part="R1" gate="G$1" x="27.94" y="81.28" smashed="yes" rot="R90">
 <attribute name="NAME" x="26.4414" y="77.47" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="31.242" y="77.47" size="1.778" layer="96" rot="R90"/>
+<attribute name="VALUE" x="26.416" y="81.026" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R2" gate="G$1" x="17.78" y="81.28" smashed="yes" rot="R90">
 <attribute name="NAME" x="16.2814" y="77.47" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="21.082" y="77.47" size="1.778" layer="96" rot="R90"/>
+<attribute name="VALUE" x="16.256" y="81.026" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R3" gate="G$1" x="22.86" y="81.28" smashed="yes" rot="R90">
 <attribute name="NAME" x="21.3614" y="77.47" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="26.162" y="77.47" size="1.778" layer="96" rot="R90"/>
+<attribute name="VALUE" x="21.336" y="81.026" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R4" gate="G$1" x="33.02" y="81.28" smashed="yes" rot="R90">
 <attribute name="NAME" x="31.5214" y="77.47" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="36.322" y="77.47" size="1.778" layer="96" rot="R90"/>
+<attribute name="VALUE" x="31.496" y="81.026" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R5" gate="G$1" x="22.86" y="35.56" smashed="yes">
 <attribute name="NAME" x="19.05" y="37.0586" size="1.778" layer="95"/>
-<attribute name="VALUE" x="19.05" y="32.258" size="1.778" layer="96"/>
+<attribute name="VALUE" x="23.114" y="37.084" size="1.778" layer="96"/>
 </instance>
 <instance part="J1" gate="G$1" x="-48.26" y="15.24" smashed="yes">
 <attribute name="VALUE" x="-50.8" y="10.414" size="1.778" layer="96" font="vector"/>
@@ -12450,13 +12451,17 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <attribute name="NAME" x="26.67" y="49.3014" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="26.67" y="54.102" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="PH1" gate="G$1" x="12.7" y="30.48" smashed="yes" rot="R270">
-<attribute name="NAME" x="12.7" y="27.94" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="10.16" y="27.94" size="1.778" layer="96" rot="R270"/>
+<instance part="PH1" gate="G$1" x="7.62" y="30.48" smashed="yes" rot="R270">
+<attribute name="NAME" x="0" y="30.48" size="1.778" layer="95"/>
+<attribute name="VALUE" x="0" y="33.02" size="1.778" layer="96"/>
 </instance>
 <instance part="R7" gate="G$1" x="20.32" y="22.86" smashed="yes" rot="R180">
-<attribute name="NAME" x="24.13" y="21.3614" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="24.13" y="26.162" size="1.778" layer="96" rot="R180"/>
+<attribute name="NAME" x="19.05" y="21.3614" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="24.13" y="21.082" size="1.778" layer="96" rot="R180"/>
+</instance>
+<instance part="R8" gate="G$1" x="17.78" y="27.94" smashed="yes">
+<attribute name="NAME" x="13.97" y="29.4386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="19.05" y="29.718" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -12472,7 +12477,8 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <wire x1="81.28" y1="53.34" x2="27.94" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="U1" gate="A" pin="3"/>
 <wire x1="27.94" y1="53.34" x2="22.86" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="0" y1="12.7" x2="30.48" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="0" y1="12.7" x2="10.16" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="12.7" x2="30.48" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="30.48" y1="12.7" x2="30.48" y2="17.78" width="0.1524" layer="91"/>
 <junction x="30.48" y="17.78"/>
 <pinref part="C1" gate="G$1" pin="2"/>
@@ -12483,6 +12489,9 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <pinref part="U1" gate="A" pin="2"/>
 <wire x1="-40.64" y1="10.16" x2="0" y2="10.16" width="0.1524" layer="91"/>
 <wire x1="0" y1="10.16" x2="0" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="R8" gate="G$1" pin="1"/>
+<wire x1="12.7" y1="27.94" x2="10.16" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="27.94" x2="10.16" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -12552,7 +12561,7 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <pinref part="PH1" gate="G$1" pin="2"/>
 <wire x1="0" y1="22.86" x2="0" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="0" y1="30.48" x2="0" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="0" y1="30.48" x2="7.62" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="0" y1="30.48" x2="2.54" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="15.24" y1="22.86" x2="0" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="J1" gate="G$1" pin="2"/>
@@ -12601,7 +12610,9 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <wire x1="30.48" y1="33.02" x2="22.86" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="33.02" x2="22.86" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="PH1" gate="G$1" pin="1"/>
-<wire x1="22.86" y1="30.48" x2="17.78" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="30.48" x2="12.7" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="R8" gate="G$1" pin="2"/>
+<wire x1="22.86" y1="27.94" x2="22.86" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$13" class="0">
