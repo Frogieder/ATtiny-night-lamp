@@ -5,12 +5,13 @@
 *
 * X * light up the LED
 * X * detect touch
-*   * touch logic
+* X * touch logic
 * X * automatic turn off
 * X * add pwm support
 * ? * fix random turning off
 * X * implement efficient sleeping
-*   * use photoresistor to turn on
+* ? * use photoresistor to turn on
+*   * conduct proper testing to remove question marks from this list
 *
 */
 
