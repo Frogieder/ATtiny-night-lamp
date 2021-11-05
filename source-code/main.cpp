@@ -8,7 +8,7 @@
 *   * touch logic
 * X * automatic turn off
 * X * add pwm support
-*   * fix random turning off
+* ? * fix random turning off
 * X * implement efficient sleeping
 *   * use photoresistor to turn on
 *
@@ -38,17 +38,23 @@
 // how many times times should we measure no touch till we are sure that there is no touch
 #define DEBOUNCE_CYCLES 10
 
+// when ADC reads value lower than this, the lamp thinks it's dark
+#define DARKNESS_TRESHOLD 230
+
+// when ADC reads value lower than this, the lamp thinks it isn't dark anymore
+#define LIGHT_TRESHOLD 240
+
 #define NOOP asm volatile("nop" ::)
 // #undef NOOP
 // #define NOOP ; // if I ever get mad, noop gets defined like this :P
 
 #define watchdog_enable()             \
     WDTCR = (1 << WDCE) | (1 << WDE); \
-    WDTCR = (1 << WDIE) | WDTO_30MS;
+    WDTCR = (1 << WDIE) | WDTO_30MS
 
 #define watchdog_disable()            \
     WDTCR = (1 << WDCE) | (1 << WDE); \
-    WDTCR = 0;
+    WDTCR = 0
 
 #define pwm_enable() TCCR0A |= (1 << COM0B1)
 
@@ -80,14 +86,12 @@ uint32_t measure_cap(uint8_t pin)
 
 static inline void adc_init()
 {
-    /*
     // ADMUX |= (1 << ADLAR) | MUX3;
     //– REFS0 ADLAR – – – MUX1 MUX
     ADMUX = 0b00100011; // setup the ADC multilpexer - adjust results to left to easily read 8-bit output; set ADC input to ADC3
     // ADEN ADSC ADATE ADIF ADIE ADPS2 ADPS1 ADPS0
     ADCSRA = 0b00000011; // ADC status register A - set clock divider to 1/8
-    DIDR0 |= 1 << ADC3D; // disable digital input on 
-    */
+    DIDR0 |= 1 << ADC3D; // disable digital input on ADC input pin
 }
 
 static inline void touch_init(void)
@@ -139,11 +143,22 @@ static inline void init(void)
     DDRB = 1 << LED; // set LED pin as output
 }
 
+uint8_t adc_read()
+{
+    ADCSRA |= 1 << ADEN; // enable ADC
+    ADCSRA |= 1 << ADSC; // start conversion
+
+    while (ADCSRA & (1 << ADSC))
+        ;                   //wait till the conversion completes (hardware clears start conversion bit)
+    uint8_t adc_reading = ADCH; // retrieve upper 8-bits from ADC results
+    ADCSRA &= ~(1 << ADEN); // disable ADC
+    return adc_reading;
+}
+
 int main(void)
 {
     cli();
     init();
-    // bool is_dark = 0;
     wdt_sleep_setup();
     sei();
     while (1)
@@ -155,23 +170,17 @@ int main(void)
             sei();
             sleep_cpu();
         }
-
-        /*
-        ADCSRA |= 1 << ADEN; // enable ADC
-        ADCSRA |= 1 << ADSC; // start conversion
-
-        while (ADCSRA & (1 << ADSC)) 
-            ;       //wait till the conversion completes (hardware clears start conversion bit)
-        int adc_reading = ADCH; // retrieve upper 8-bits from ADC results
-        ADCSRA &= ~(1 << ADEN); // enable ADC
-        */
-        // _delay_ms(50);
     }
 }
+
+/**************
+*  Main code  *
+***************/
 
 bool is_touching = false;
 uint8_t led_strength = 0;
 int debounce_cycles = 0;
+bool is_dark = false;
 
 static inline void light_loop()
 {
@@ -210,18 +219,14 @@ ISR(WDT_vect)
 {
     sleep_disable();
     cli();
-    // re-enable watchdog interrupts, since they get disabled each time an interrupt occurs
-    // WDTCR |= (1 << WDIE);
+    watchdog_disable();
 
-    // replacement for the previous statement, this disables WDT instead (reenabled at the end of ISR)
-    watchdog_disable()
-
-        /*
-      #############
-     # MAIN LOOP #
+    /*
+    #############
+    # MAIN LOOP #
     #############
     */
-        if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
+    if (measure_cap(ECHO) > (calibration + TOUCH_SENSITIVITY))
     {
         if (!is_touching)
         {
@@ -241,6 +246,21 @@ ISR(WDT_vect)
         {
             is_touching = false;
         }
+    }
+    uint8_t reading = adc_read();
+   
+    if (reading < DARKNESS_TRESHOLD)
+    {
+        if (is_dark)
+        {    
+            light_loop();
+            pwm_disable();
+        }
+        is_dark = false;
+    }
+    else if (reading > LIGHT_TRESHOLD)
+    {
+        is_dark = true;
     }
 
     // post-ISR cleanup
